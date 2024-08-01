@@ -1,0 +1,39 @@
+#include "TemperatureStatusManager.h"
+
+#include "temperature_manager/TemperatureStatus.h"
+
+namespace temperature_manager
+{
+  TemperatureStatusManager::TemperatureStatusManager(const ros::Publisher& pub)
+      : m_pub(pub)
+      , m_status(TemperatureStatus::UNKNOWN)
+  {
+  }
+
+  void TemperatureStatusManager::TemperatureCB(const std_msgs::Float32::ConstPtr& msg)
+  {
+    const float celsius = msg->data;
+
+    ROS_DEBUG("Temperature received (C): %f", celsius);
+
+    if (celsius > 55.0f)
+    {
+      ROS_WARN("High temperature (C): %f", celsius);
+      m_status = TemperatureStatus::HIGH;
+    }
+    else if (celsius < -10.0f)  // As per Polaris Gem e2 specs
+    {
+      ROS_WARN("Low temperature (C): %f", celsius);
+      m_status = TemperatureStatus::LOW;
+    }
+    else
+    {
+      m_status = TemperatureStatus::NORMAL;
+    }
+
+    TemperatureStatus ts;
+    ts.status = m_status;
+    m_pub.publish(ts);
+  }
+
+}  // namespace temperature_manager
