@@ -4,9 +4,15 @@ project(battery_manager)
 ## Find catkin macros and libraries
 find_package(catkin REQUIRED COMPONENTS
   roscpp
-  rospy
+  message_generation
   std_msgs
   genmsg
+)
+
+## Generate messages in the 'msg' folder
+add_message_files(
+  FILES
+  BatteryStatus.msg
 )
 
 ## Generate added messages and services with any dependencies listed here
@@ -27,7 +33,11 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES battery_manager
-#  CATKIN_DEPENDS roscpp
+  CATKIN_DEPENDS 
+    roscpp
+    message_runtime
+    std_msgs
+    genmsg
 #  DEPENDS system_lib
 )
 
@@ -41,31 +51,7 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-
-## Declare a C++ executable
-## With catkin_make all packages are built within a single CMake context
-## The recommended prefix ensures that target names across packages don't collide
-add_executable(battery_percentage_publisher_node src/publisher.cpp)
-add_executable(battery_percentage_subscriber_node src/subscriber.cpp)
-
-## Rename C++ executable without prefix
-## The above recommended prefix causes long target names, the following renames the
-## target back to the shorter version for ease of user use
-## e.g. "rosrun someones_pkg node" instead of "rosrun someones_pkg someones_pkg_node"
-# set_target_properties(${PROJECT_NAME}_node PROPERTIES OUTPUT_NAME node PREFIX "")
-
-## Add cmake target dependencies of the executable
-add_dependencies(battery_percentage_publisher_node ${battery_percentage_publisher_node_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(battery_percentage_subscriber_node ${battery_percentage_subscriber_node_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-
-## Specify libraries to link a library or executable target against
-target_link_libraries(battery_percentage_publisher_node
-  ${catkin_LIBRARIES}
-)
-target_link_libraries(battery_percentage_subscriber_node
-  ${catkin_LIBRARIES}
-)
-
+add_subdirectory(src)
 
 #############
 ## Testing ##

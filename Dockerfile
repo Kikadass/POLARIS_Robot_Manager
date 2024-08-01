@@ -33,6 +33,7 @@ RUN echo "source ${HOME}/gem_ws/devel/setup.bash" >>  ${HOME}/.bashrc
 RUN echo "alias launchSimulation='roslaunch gem_gazebo gem_gazebo_rviz.launch velodyne_points:=\"true\"'" >>  ${HOME}/.bashrc
 RUN echo "alias displaySensorInfo='roslaunch gem_gazebo gem_sensor_info.launch'" >>  ${HOME}/.bashrc
 RUN echo "alias moveAroundTheMap='rosrun gem_pure_pursuit_sim pure_pursuit_sim.py'" >>  ${HOME}/.bashrc
+RUN echo "alias goToProject='cd ${HOME}/gem_ws/src/POLARIS_Robot_Manager'" >>  ${HOME}/.bashrc
 
 # Setup simple track environment
 CMD source devel/setup.bash && roslaunch gem_gazebo gem_gazebo_rviz.launch velodyne_points:="true"
