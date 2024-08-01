@@ -1,0 +1,16 @@
+services:
+  myservice:
+    image: polaris_simulator
+    # runtime: nvidia  # This enables GPU support
+    environment:
+      - DISPLAY=host.docker.internal:0
+      # - NVIDIA_VISIBLE_DEVICES=all  # Makes all GPUs visible
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ./:/root/gem_ws/src/POLARIS_Robot_Manager
+    stdin_open: true
+    tty: true
+    command: ["/bin/bash"]  # Start a bash shell interactively
+
+
+
