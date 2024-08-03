@@ -17,7 +17,7 @@ namespace signal_status_manager
       : m_pub(nh.advertise<signal_status_manager::SignalStatus>("signal_status", 1000))
       , m_sub(nh.subscribe("signal_strength", 1000, &SignalStatusManager::SignalStrengthCB, this))
       , m_lowSignalTimer(nh.createTimer(ros::Duration(20.0), &SignalStatusManager::TimerCB, this, true, false))
-      , m_noSignalTimer(nh.createTimer(ros::Duration(20.0), &SignalStatusManager::TimerCB, this, true, false))
+      , m_noSignalTimer(nh.createTimer(ros::Duration(10.0), &SignalStatusManager::TimerCB, this, true, false))
       , m_status(SignalStatus::UNKNOWN)
   {
   }
@@ -54,6 +54,7 @@ namespace signal_status_manager
           m_status = SignalStatus::UNSTABLE;
 
           if (!m_lowSignalTimer.hasStarted()) m_lowSignalTimer.start();
+          if (m_noSignalTimer.hasStarted()) m_noSignalTimer.stop();
         }
         break;
         default:
