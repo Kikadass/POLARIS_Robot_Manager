@@ -28,6 +28,7 @@ int main(int argc, char** argv)
     else
       currentTemperature += additionAmount;
 
+    ros::spinOnce();
     loop_rate.sleep();
   }
 }
