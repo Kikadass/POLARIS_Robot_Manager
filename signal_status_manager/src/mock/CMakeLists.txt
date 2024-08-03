@@ -6,7 +6,7 @@ set(EXECUTABLE_NAME signal_strength_publisher_node)
 add_executable(${EXECUTABLE_NAME} ${SOURCES})
 
 ## Add cmake target dependencies of the executable
-add_dependencies(${EXECUTABLE_NAME} ${${EXECUTABLE_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(${EXECUTABLE_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(${EXECUTABLE_NAME} ${catkin_LIBRARIES})

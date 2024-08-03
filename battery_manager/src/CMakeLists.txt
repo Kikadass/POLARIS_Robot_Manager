@@ -4,7 +4,7 @@ file(GLOB SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
 set(EXECUTABLE_NAME battery_manager_node)
 
 add_executable(${EXECUTABLE_NAME} ${SOURCES})
-add_dependencies(${EXECUTABLE_NAME} ${${EXECUTABLE_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(${EXECUTABLE_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(${EXECUTABLE_NAME} ${catkin_LIBRARIES})
 
 #############
