@@ -19,12 +19,12 @@ namespace temperature_manager
     if (celsius > 55.0f)
     {
       ROS_WARN("High temperature (C): %f", celsius);
-      m_status = TemperatureStatus::HIGH;
+      m_status = TemperatureStatus::ERROR;
     }
     else if (celsius < -10.0f)  // As per Polaris Gem e2 specs
     {
       ROS_WARN("Low temperature (C): %f", celsius);
-      m_status = TemperatureStatus::LOW;
+      m_status = TemperatureStatus::ERROR;
     }
     else
     {

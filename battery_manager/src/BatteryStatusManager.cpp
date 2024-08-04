@@ -27,7 +27,7 @@ namespace battery_manager
     }
     else
     {
-      m_status = BatteryStatus::LOW;
+      m_status = BatteryStatus::ERROR;
       ROS_WARN("Battery is low.");
     }
 
