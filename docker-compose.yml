@@ -1,6 +1,11 @@
+version: "3.0"
+
 services:
-  myservice:
-    image: polaris_simulator
+  polaris_simulator_dev:
+    build: 
+      context: .
+      dockerfile: Dockerfile.dev
+    image: polaris_simulator_dev_image
     # runtime: nvidia  # This enables GPU support
     environment:
       - DISPLAY=host.docker.internal:0
@@ -12,5 +17,19 @@ services:
     tty: true
     command: ["/bin/bash"]  # Start a bash shell interactively
 
-
-
+  polaris_simulator_user:
+    build: 
+      context: .
+      dockerfile: Dockerfile.user
+    image: polaris_simulator_user_image
+    depends_on:
+      - polaris_simulator_dev
+    # runtime: nvidia  # This enables GPU support
+    environment:
+      - DISPLAY=host.docker.internal:0
+      # - NVIDIA_VISIBLE_DEVICES=all  # Makes all GPUs visible
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    stdin_open: true
+    tty: true
+    command: ["/bin/bash"]  # Start a bash shell interactively

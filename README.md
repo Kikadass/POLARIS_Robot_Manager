@@ -23,7 +23,7 @@ All other dependencies will be downloaded and installed in the Docker container
 First of all the Docker container needs to be built from the repository directory with:
 
 ```
-docker build -t polaris_simulator .
+docker compose build
 ```
 
 ## Run Docker container
@@ -45,6 +45,19 @@ First, Get the container ID or NAME
 docker ps
 ```
 
+Example:
+
+```
+$ docker ps
+CONTAINER ID   IMAGE                          COMMAND                  CREATED         STATUS         PORTS     NAMES
+0e387b9d222f   polaris_simulator_user_image   "/ros_entrypoint.sh …"   2 minutes ago   Up 4 seconds             polaris_robot_manager-polaris_simulator_user-1
+682ebed3d465   polaris_simulator_dev_image    "/ros_entrypoint.sh …"   2 minutes ago   Up 5 seconds             polaris_robot_manager-polaris_simulator_dev-1
+```
+
+You will see there are two docker containers, one will share a volume between the host machine and the docker container for development.
+The other will just pull the git repository, compile and set things up to just run the latest code.
+Use the user container.
+
 Second, make execute a new bash terminal inside the docker container (RECOMMENDED):
 
 ```
@@ -58,6 +71,29 @@ Or just attach it to the main process like so:
 
 ```
 docker attach <container_name_or_id>
+```
+
+# Run
+
+First of all follow the steps to set up Docker, run the docker container and attach a terminal to the polaris_simulator_user_image container shown above.
+
+## Run Robot Status Manager
+
+An alias has been created for easy use.
+Just run:
+
+```
+launchRobotStatusManager
+```
+
+After launching the Robot Status Manager feel free to mock any of the sensors with some of the following commands in a different terminal:
+
+```
+mockBattery
+mockGpsAccuracy
+mockNoSignal
+mockMixedUnstableSignal
+mockTemperature
 ```
 
 # Design choices

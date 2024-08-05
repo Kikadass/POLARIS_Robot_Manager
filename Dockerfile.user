@@ -1,0 +1,18 @@
+FROM polaris_simulator_dev_image
+
+# HOME can be overwritten by --build-arg HOME=$HOME in the docker build command
+ARG HOME=/root
+SHELL ["/bin/bash", "-c"]
+
+# Clone the POLARIS_GEM_e2 in the expected directory
+RUN mkdir -p ${HOME}/gem_ws/src 
+WORKDIR ${HOME}/gem_ws/src
+RUN git clone https://github.com/Kikadass/POLARIS_Robot_Manager.git
+
+# Compile Robot Manager
+WORKDIR ${HOME}/gem_ws
+RUN source /opt/ros/noetic/setup.bash && catkin_make
+RUN source devel/setup.bash
+
+# Setup simple track environment
+CMD /bin/bash
