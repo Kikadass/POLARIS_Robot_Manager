@@ -108,6 +108,12 @@ This software architecture gives clear responsability to each node and makes for
 
 # Planned improvements
 
+## Unit tests
+
+Firstly, and most importantly, unit tests. This is essential and should have been done during the process. However, due to the lack of time priority was given on delivering most of the functionality. It is important to clarify that, this is not how things should be done in a proffesional environment, and with the enough resources to develop, unit testing should take a high priority in the process. In some scenarios, it would be even beneficial to make the unit tests first, even before the functionality, following Test Driven Developemnt (TDD).
+
+Therefore, this would be the first thing to implement next.
+
 ## Behavior Trees
 
 It would be benefitial to add Behavior Trees to the Robot Status Manager, as it can easily become overcomplicated with if statements, when its functionality grows, taking care of all other possible scenarios the robot could be involved in.
