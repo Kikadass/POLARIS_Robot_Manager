@@ -30,7 +30,9 @@ RUN source /opt/ros/noetic/setup.bash && catkin_make
 # Add setup to .bashrc to simplify usage 
 RUN echo "source  /opt/ros/noetic/setup.bash" >>  ${HOME}/.bashrc
 RUN echo "source ${HOME}/gem_ws/devel/setup.bash" >>  ${HOME}/.bashrc
-RUN echo "alias launchSimulation='roslaunch gem_gazebo gem_gazebo_rviz.launch velodyne_points:=\"true\"'" >>  ${HOME}/.bashrc
+RUN echo "alias launchGazeboWithGem='roslaunch gem_gazebo gem_gazebo_rviz.launch velodyne_points:=\"true\"'" >>  ${HOME}/.bashrc
+RUN echo "alias launchRobotStatusManager='roslaunch robot_status_manager robot_status_manager.launch'" >>  ${HOME}/.bashrc
+
 RUN echo "alias displaySensorInfo='roslaunch gem_gazebo gem_sensor_info.launch'" >>  ${HOME}/.bashrc
 RUN echo "alias moveAroundTheMap='rosrun gem_pure_pursuit_sim pure_pursuit_sim.py'" >>  ${HOME}/.bashrc
 RUN echo "alias goToProject='cd ${HOME}/gem_ws/src/POLARIS_Robot_Manager'" >>  ${HOME}/.bashrc
