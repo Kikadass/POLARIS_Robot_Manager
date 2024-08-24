@@ -1,12 +1,10 @@
 <?xml version="1.0"?>
 <launch>
-    <!-- Launch the sensor nodes first -->
-    <group ns="sensor_managers">
-      <node name="battery_manager" pkg="battery_manager" type="battery_manager_node" output="screen"/>
-      <node name="gps_accuracy_manager" pkg="gps_accuracy_manager" type="gps_accuracy_manager_node" output="screen"/>
-      <node name="signal_status_manager" pkg="signal_status_manager" type="signal_status_manager_node" output="screen"/>
-      <node name="temperature_manager" pkg="temperature_manager" type="temperature_manager_node" output="screen"/>
-    </group>
+
+    <node name="battery_manager" pkg="battery_manager" type="battery_manager_node" output="screen"/>
+    <node name="gps_accuracy_manager" pkg="gps_accuracy_manager" type="gps_accuracy_manager_node" output="screen"/>
+    <node name="signal_status_manager" pkg="signal_status_manager" type="signal_status_manager_node" output="screen"/>
+    <node name="temperature_manager" pkg="temperature_manager" type="temperature_manager_node" output="screen"/>
 
     <!-- You can add more nodes as needed -->
     <node name="robot_status_manager" pkg="robot_status_manager" type="robot_status_manager_node" output="screen"/>

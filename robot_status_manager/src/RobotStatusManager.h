@@ -42,11 +42,6 @@ namespace robot_status_manager
       }
     }
 
-    // void BatteryStatusCB(const battery_manager::BatteryStatus::ConstPtr& msg);
-    // void GpsAccuracyStatusCB(const gps_accuracy_manager::GpsAccuracyStatus::ConstPtr& msg);
-    // void SignalStatusCB(const signal_status_manager::SignalStatus::ConstPtr& msg);
-    // void TemperatureStatusCB(const temperature_manager::TemperatureStatus::ConstPtr& msg);
-
     void EmergencyButtonPressedCB(const std_msgs::Bool::ConstPtr& msg);
 
     ERROR_TYPE determineErrorType(const battery_manager::BatteryStatus::ConstPtr& msg) const;
