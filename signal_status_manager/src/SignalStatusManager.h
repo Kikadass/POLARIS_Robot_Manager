@@ -1,5 +1,4 @@
-#include "signal_status_manager/SignalStrength.h"
-
+#include <robot_manager_msgs/SignalStrength.h>
 #include <ros/ros.h>
 
 namespace signal_status_manager
@@ -10,7 +9,7 @@ namespace signal_status_manager
     SignalStatusManager(ros::NodeHandle& nh);
 
    private:
-    void SignalStrengthCB(const signal_status_manager::SignalStrength::ConstPtr& msg);
+    void SignalStrengthCB(const robot_manager_msgs::SignalStrength::ConstPtr& msg);
 
     void TimerCB(const ros::TimerEvent& event);
 

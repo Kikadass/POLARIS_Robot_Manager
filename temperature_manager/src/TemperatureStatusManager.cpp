@@ -1,12 +1,12 @@
 #include "TemperatureStatusManager.h"
 
-#include "temperature_manager/TemperatureStatus.h"
+#include <robot_manager_msgs/TemperatureStatus.h>
 
 namespace temperature_manager
 {
   TemperatureStatusManager::TemperatureStatusManager(const ros::Publisher& pub)
       : m_pub(pub)
-      , m_status(TemperatureStatus::UNKNOWN)
+      , m_status(robot_manager_msgs::TemperatureStatus::UNKNOWN)
   {
   }
 
@@ -19,19 +19,19 @@ namespace temperature_manager
     if (celsius > 55.0f)
     {
       ROS_WARN("High temperature (C): %f", celsius);
-      m_status = TemperatureStatus::ERROR;
+      m_status = robot_manager_msgs::TemperatureStatus::ERROR;
     }
     else if (celsius < -10.0f)  // As per Polaris Gem e2 specs
     {
       ROS_WARN("Low temperature (C): %f", celsius);
-      m_status = TemperatureStatus::ERROR;
+      m_status = robot_manager_msgs::TemperatureStatus::ERROR;
     }
     else
     {
-      m_status = TemperatureStatus::NORMAL;
+      m_status = robot_manager_msgs::TemperatureStatus::NORMAL;
     }
 
-    TemperatureStatus ts;
+    robot_manager_msgs::TemperatureStatus ts;
     ts.status = m_status;
     m_pub.publish(ts);
   }

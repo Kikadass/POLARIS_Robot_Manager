@@ -1,10 +1,10 @@
-#include <battery_manager/BatteryStatus.h>
-#include <gps_accuracy_manager/GpsAccuracyStatus.h>
-#include <navigation_manager/NavigationStatus.h>
+#include <robot_manager_msgs/BatteryStatus.h>
+#include <robot_manager_msgs/GpsAccuracyStatus.h>
+#include <robot_manager_msgs/NavigationStatus.h>
+#include <robot_manager_msgs/SignalStatus.h>
+#include <robot_manager_msgs/TemperatureStatus.h>
 #include <ros/ros.h>
-#include <signal_status_manager/SignalStatus.h>
 #include <std_msgs/Bool.h>
-#include <temperature_manager/TemperatureStatus.h>
 
 #include <vector>
 
@@ -44,14 +44,14 @@ namespace robot_status_manager
     }
 
     void EmergencyButtonPressedCB(const std_msgs::Bool::ConstPtr& msg);
-    void NavigationStatusCB(const navigation_manager::NavigationStatus::ConstPtr& msg);
+    void NavigationStatusCB(const robot_manager_msgs::NavigationStatus::ConstPtr& msg);
 
     void SetStatus(const unsigned int robotStatus);
 
-    ERROR_TYPE determineErrorType(const battery_manager::BatteryStatus::ConstPtr& msg) const;
-    ERROR_TYPE determineErrorType(const gps_accuracy_manager::GpsAccuracyStatus::ConstPtr& msg) const;
-    ERROR_TYPE determineErrorType(const signal_status_manager::SignalStatus::ConstPtr& msg) const;
-    ERROR_TYPE determineErrorType(const temperature_manager::TemperatureStatus::ConstPtr& msg) const;
+    ERROR_TYPE determineErrorType(const robot_manager_msgs::BatteryStatus::ConstPtr& msg) const;
+    ERROR_TYPE determineErrorType(const robot_manager_msgs::GpsAccuracyStatus::ConstPtr& msg) const;
+    ERROR_TYPE determineErrorType(const robot_manager_msgs::SignalStatus::ConstPtr& msg) const;
+    ERROR_TYPE determineErrorType(const robot_manager_msgs::TemperatureStatus::ConstPtr& msg) const;
 
    private:
     ros::Publisher m_pub;

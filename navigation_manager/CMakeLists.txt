@@ -7,12 +7,7 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   std_msgs
   genmsg
-)
-
-## Generate messages in the 'msg' folder
-add_message_files(
-  FILES
-  NavigationStatus.msg
+  robot_manager_msgs
 )
 
 ## Generate added messages and services with any dependencies listed here

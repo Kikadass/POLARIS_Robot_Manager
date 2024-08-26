@@ -1,12 +1,12 @@
 #include "BatteryStatusManager.h"
 
-#include "battery_manager/BatteryStatus.h"
+#include <robot_manager_msgs/BatteryStatus.h>
 
 namespace battery_manager
 {
   BatteryStatusManager::BatteryStatusManager(const ros::Publisher& pub)
       : m_pub(pub)
-      , m_status(BatteryStatus::UNKNOWN)
+      , m_status(robot_manager_msgs::BatteryStatus::UNKNOWN)
   {
   }
 
@@ -19,19 +19,19 @@ namespace battery_manager
     if (percentage > 100.0f || percentage < 0.0f)
     {
       ROS_ERROR("Invalid battery percentage: %f", percentage);
-      m_status = BatteryStatus::ERROR;
+      m_status = robot_manager_msgs::BatteryStatus::ERROR;
     }
     else if (percentage > 50.0f)
     {
-      m_status = BatteryStatus::NORMAL;
+      m_status = robot_manager_msgs::BatteryStatus::NORMAL;
     }
     else
     {
-      m_status = BatteryStatus::ERROR;
+      m_status = robot_manager_msgs::BatteryStatus::ERROR;
       ROS_WARN("Battery is low.");
     }
 
-    BatteryStatus bs;
+    robot_manager_msgs::BatteryStatus bs;
     bs.status = m_status;
     m_pub.publish(bs);
   }

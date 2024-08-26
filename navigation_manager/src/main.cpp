@@ -1,6 +1,6 @@
-#include "navigation_manager/NavigationStatus.h"
 #include "NavigationStatusManager.h"
 
+#include <robot_manager_msgs/NavigationStatus.h>
 #include <ros/ros.h>
 
 int main(int argc, char** argv)

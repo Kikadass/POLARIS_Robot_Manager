@@ -7,6 +7,7 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   std_msgs
   genmsg
+  robot_manager_msgs
 )
 
 ## Generate messages in the 'msg' folder
@@ -39,11 +40,6 @@ catkin_package(
     std_msgs
     genmsg
     robot_manager_msgs
-    battery_manager
-    gps_accuracy_manager
-    signal_status_manager
-    temperature_manager
-    navigation_manager
 #  DEPENDS system_lib
 )
 

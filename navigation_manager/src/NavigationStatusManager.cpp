@@ -1,19 +1,19 @@
 #include "NavigationStatusManager.h"
 
-#include "navigation_manager/NavigationStatus.h"
+#include <robot_manager_msgs/NavigationStatus.h>
 
 namespace navigation_manager
 {
   NavigationStatusManager::NavigationStatusManager(ros::NodeHandle& nh)
-      : m_pub(nh.advertise<NavigationStatus>("navigation_status", 1000))
+      : m_pub(nh.advertise<robot_manager_msgs::NavigationStatus>("navigation_status", 1000))
       , m_sub(nh.subscribe("robot_status", 1000, &NavigationStatusManager::RobotStatusCB, this))
-      , m_status(NavigationStatus::IDLE)
+      , m_status(robot_manager_msgs::NavigationStatus::IDLE)
   {
   }
 
   void NavigationStatusManager::PublishNavigationStatus() const
   {
-    NavigationStatus msg;
+    robot_manager_msgs::NavigationStatus msg;
     msg.status = m_status;
     m_pub.publish(msg);
 
@@ -27,19 +27,19 @@ namespace navigation_manager
     switch (msg->status)
     {
       case robot_manager_msgs::RobotStatus::IDLE:
-        m_status = NavigationStatus::RUNNING;
+        m_status = robot_manager_msgs::NavigationStatus::RUNNING;
         break;
       case robot_manager_msgs::RobotStatus::RUNNING:
         break;
       case robot_manager_msgs::RobotStatus::ERROR:
-        m_status = NavigationStatus::IDLE;
+        m_status = robot_manager_msgs::NavigationStatus::IDLE;
         break;
       default:
         ROS_WARN("Unexpected robot status: %u", msg->status);
         break;
     }
 
-    NavigationStatus ns;
+    robot_manager_msgs::NavigationStatus ns;
     ns.status = m_status;
     m_pub.publish(ns);
     ROS_INFO("Changed navigation status: %u", m_status);

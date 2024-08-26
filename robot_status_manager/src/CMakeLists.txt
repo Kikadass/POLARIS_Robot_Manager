@@ -4,14 +4,9 @@ file(GLOB SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
 set(EXECUTABLE_NAME robot_status_manager_node)
 
 add_executable(${EXECUTABLE_NAME} ${SOURCES})
-add_dependencies(${EXECUTABLE_NAME} 
+add_dependencies(${EXECUTABLE_NAME}
   ${${PROJECT_NAME}_EXPORTED_TARGETS}
   ${robot_manager_msgs_EXPORTED_TARGETS}
-  ${battery_manager_EXPORTED_TARGETS}
-  ${gps_accuracy_manager_EXPORTED_TARGETS}
-  ${signal_status_manager_EXPORTED_TARGETS}
-  ${temperature_manager_EXPORTED_TARGETS}
-  ${navigation_manager_EXPORTED_TARGETS}
   ${catkin_EXPORTED_TARGETS}
 )
 target_link_libraries(${EXECUTABLE_NAME} ${catkin_LIBRARIES})

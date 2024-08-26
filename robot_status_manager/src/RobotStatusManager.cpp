@@ -9,21 +9,21 @@ namespace robot_status_manager
 {
   RobotStatusManager::RobotStatusManager(ros::NodeHandle& nh)
       : m_pub(nh.advertise<robot_manager_msgs::RobotStatus>("robot_status", 1000))
-      , m_batteryStatusSub(nh.subscribe<battery_manager::BatteryStatus>(
-            "battery_status", 1000, &RobotStatusManager::CheckForErrorsCB<battery_manager::BatteryStatus>, this))
+      , m_batteryStatusSub(nh.subscribe<robot_manager_msgs::BatteryStatus>(
+            "battery_status", 1000, &RobotStatusManager::CheckForErrorsCB<robot_manager_msgs::BatteryStatus>, this))
       , m_emergencyButtonSub(
             nh.subscribe("emergency_button_pressed", 1000, &RobotStatusManager::EmergencyButtonPressedCB, this))
-      , m_gpsAccuracyStatusSub(nh.subscribe<gps_accuracy_manager::GpsAccuracyStatus>(
+      , m_gpsAccuracyStatusSub(nh.subscribe<robot_manager_msgs::GpsAccuracyStatus>(
             "gps_accuracy_status",
             1000,
-            &RobotStatusManager::CheckForErrorsCB<gps_accuracy_manager::GpsAccuracyStatus>,
+            &RobotStatusManager::CheckForErrorsCB<robot_manager_msgs::GpsAccuracyStatus>,
             this))
-      , m_signalStatusSub(nh.subscribe<signal_status_manager::SignalStatus>(
-            "signal_status", 1000, &RobotStatusManager::CheckForErrorsCB<signal_status_manager::SignalStatus>, this))
-      , m_temperatureStatusSub(nh.subscribe<temperature_manager::TemperatureStatus>(
+      , m_signalStatusSub(nh.subscribe<robot_manager_msgs::SignalStatus>(
+            "signal_status", 1000, &RobotStatusManager::CheckForErrorsCB<robot_manager_msgs::SignalStatus>, this))
+      , m_temperatureStatusSub(nh.subscribe<robot_manager_msgs::TemperatureStatus>(
             "temperature_status",
             1000,
-            &RobotStatusManager::CheckForErrorsCB<temperature_manager::TemperatureStatus>,
+            &RobotStatusManager::CheckForErrorsCB<robot_manager_msgs::TemperatureStatus>,
             this))
       , m_navigationStatusSub(nh.subscribe("navigation_status", 1000, &RobotStatusManager::NavigationStatusCB, this))
       , m_status(robot_manager_msgs::RobotStatus::IDLE)
@@ -66,9 +66,9 @@ namespace robot_status_manager
     }
   }
 
-  void RobotStatusManager::NavigationStatusCB(const navigation_manager::NavigationStatus::ConstPtr& msg)
+  void RobotStatusManager::NavigationStatusCB(const robot_manager_msgs::NavigationStatus::ConstPtr& msg)
   {
-    if (msg->status == navigation_manager::NavigationStatus::ERROR)
+    if (msg->status == robot_manager_msgs::NavigationStatus::ERROR)
     {
       m_errors.insert(ERROR_TYPE::NAVIGATION);
     }
@@ -79,37 +79,37 @@ namespace robot_status_manager
         m_errors.erase(ERROR_TYPE::NAVIGATION);
       }
 
-      const std::unordered_map<navigation_manager::NavigationStatus, robot_manager_msgs::RobotStatus> statusMap = {
-          {navigation_manager::NavigationStatus::RUNNING, robot_manager_msgs::RobotStatus::RUNNING},
-          {navigation_manager::NavigationStatus::IDLE, robot_manager_msgs::RobotStatus::IDLE},
-          {navigation_manager::NavigationStatus::ERROR, robot_manager_msgs::RobotStatus::ERROR}};
+      const std::unordered_map<robot_manager_msgs::NavigationStatus, robot_manager_msgs::RobotStatus> statusMap = {
+          {robot_manager_msgs::NavigationStatus::RUNNING, robot_manager_msgs::RobotStatus::RUNNING},
+          {robot_manager_msgs::NavigationStatus::IDLE, robot_manager_msgs::RobotStatus::IDLE},
+          {robot_manager_msgs::NavigationStatus::ERROR, robot_manager_msgs::RobotStatus::ERROR}};
 
       SetStatus(statusMap.at(msg->status));
     }
   }
 
-  void SetStatus(const unsigned int robotStatus)
+  void RobotStatusManager::SetStatus(const unsigned int robotStatus)
   {
     // Do not change status if there are ERRORS.
     if (m_errors.empty()) m_status = robotStatus;
   }
 
-  ERROR_TYPE RobotStatusManager::determineErrorType(const battery_manager::BatteryStatus::ConstPtr& msg) const
+  ERROR_TYPE RobotStatusManager::determineErrorType(const robot_manager_msgs::BatteryStatus::ConstPtr& msg) const
   {
     return ERROR_TYPE::BATTERY;
   }
 
-  ERROR_TYPE RobotStatusManager::determineErrorType(const gps_accuracy_manager::GpsAccuracyStatus::ConstPtr& msg) const
+  ERROR_TYPE RobotStatusManager::determineErrorType(const robot_manager_msgs::GpsAccuracyStatus::ConstPtr& msg) const
   {
     return ERROR_TYPE::GPS_ACCURACY;
   }
 
-  ERROR_TYPE RobotStatusManager::determineErrorType(const signal_status_manager::SignalStatus::ConstPtr& msg) const
+  ERROR_TYPE RobotStatusManager::determineErrorType(const robot_manager_msgs::SignalStatus::ConstPtr& msg) const
   {
     return ERROR_TYPE::SIGNAL;
   }
 
-  ERROR_TYPE RobotStatusManager::determineErrorType(const temperature_manager::TemperatureStatus::ConstPtr& msg) const
+  ERROR_TYPE RobotStatusManager::determineErrorType(const robot_manager_msgs::TemperatureStatus::ConstPtr& msg) const
   {
     return ERROR_TYPE::TEMPERATURE;
   }

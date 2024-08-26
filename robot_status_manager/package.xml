@@ -14,23 +14,12 @@
   <build_depend>genmsg</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>robot_manager_msgs</build_depend>
-  <build_depend>battery_manager</build_depend>
-  <build_depend>gps_accuracy_manager</build_depend>
-  <build_depend>signal_status_manager</build_depend>
-  <build_depend>temperature_manager</build_depend>
-  <build_depend>navigation_manager</build_depend>
   <build_export_depend>roscpp</build_export_depend>
   <build_export_depend>robot_manager_msgs</build_export_depend>
-  <build_export_depend>battery_manager</build_export_depend>
-  <build_export_depend>gps_accuracy_manager</build_export_depend>
-  <build_export_depend>signal_status_manager</build_export_depend>
-  <build_export_depend>temperature_manager</build_export_depend>
-  <build_depend>navigation_manager</build_depend>
   <exec_depend>message_runtime</exec_depend>
   <exec_depend>std_msgs</exec_depend>
   <exec_depend>genmsg</exec_depend>
   <exec_depend>roscpp</exec_depend>
-  <exec_depend>navigation_manager</exec_depend>
 
   <!-- Use test_depend for packages you need only for testing: -->
   <!--   <test_depend>gtest</test_depend> -->

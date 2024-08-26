@@ -7,13 +7,7 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   std_msgs
   genmsg
-)
-
-## Generate messages in the 'msg' folder
-add_message_files(
-  FILES
-  SignalStrength.msg
-  SignalStatus.msg
+  robot_manager_msgs
 )
 
 ## Generate added messages and services with any dependencies listed here
@@ -39,6 +33,7 @@ catkin_package(
     message_runtime
     std_msgs
     genmsg
+    robot_manager_msgs
 #  DEPENDS system_lib
 )
 

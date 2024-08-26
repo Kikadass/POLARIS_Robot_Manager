@@ -1,7 +1,6 @@
 #include "MockSignalStrengthPublisher.h"
 
-#include "signal_status_manager/SignalStrength.h"
-
+#include <robot_manager_msgs/SignalStrength.h>
 #include <ros/ros.h>
 
 #include <cstdlib>
@@ -10,7 +9,7 @@
 namespace signal_status_manager
 {
   SignalStrengthPublisher::SignalStrengthPublisher(ros::NodeHandle& nh, const bool noSignal)
-      : m_pub(nh.advertise<signal_status_manager::SignalStrength>("signal_strength", 1000))
+      : m_pub(nh.advertise<robot_manager_msgs::SignalStrength>("signal_strength", 1000))
       , m_stableStrengthTimer(
             nh.createTimer(ros::Duration(30.0), &SignalStrengthPublisher::StartUnstableConnection, this, true, true))
       , m_unstableStrengthTimer(nh.createTimer(
@@ -42,15 +41,16 @@ namespace signal_status_manager
 
   void SignalStrengthPublisher::PublishSignalStrength()
   {
-    SignalStrength msg;
+    robot_manager_msgs::SignalStrength msg;
 
     if (m_stable && (rand() % 10 != 0))
     {
-      msg.strength = SignalStrength::STABLE;
+      msg.strength = robot_manager_msgs::SignalStrength::STABLE;
     }
     else
     {
-      msg.strength = (m_noSignal || (rand() % 2 == 0)) ? SignalStrength::NO_SIGNAL : SignalStrength::LOW;
+      msg.strength = (m_noSignal || (rand() % 2 == 0)) ? robot_manager_msgs::SignalStrength::NO_SIGNAL
+                                                       : robot_manager_msgs::SignalStrength::LOW;
     }
 
     m_pub.publish(msg);
