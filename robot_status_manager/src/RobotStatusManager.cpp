@@ -4,6 +4,7 @@
 
 #include <functional>
 #include <memory>
+#include <unordered_map>
 
 namespace robot_status_manager
 {
@@ -79,10 +80,11 @@ namespace robot_status_manager
         m_errors.erase(ERROR_TYPE::NAVIGATION);
       }
 
-      const std::unordered_map<robot_manager_msgs::NavigationStatus, robot_manager_msgs::RobotStatus> statusMap = {
-          {robot_manager_msgs::NavigationStatus::RUNNING, robot_manager_msgs::RobotStatus::RUNNING},
-          {robot_manager_msgs::NavigationStatus::IDLE, robot_manager_msgs::RobotStatus::IDLE},
-          {robot_manager_msgs::NavigationStatus::ERROR, robot_manager_msgs::RobotStatus::ERROR}};
+      using namespace robot_manager_msgs;
+      const std::unordered_map<unsigned int, unsigned int> statusMap = {
+          {NavigationStatus::RUNNING, RobotStatus::RUNNING},
+          {NavigationStatus::IDLE, RobotStatus::IDLE},
+          {NavigationStatus::ERROR, RobotStatus::ERROR}};
 
       SetStatus(statusMap.at(msg->status));
     }

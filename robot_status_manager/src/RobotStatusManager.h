@@ -25,6 +25,8 @@ namespace robot_status_manager
    public:
     RobotStatusManager(ros::NodeHandle& nh);
 
+    void Update();
+
     void PublishRobotStatus() const;
 
    private:

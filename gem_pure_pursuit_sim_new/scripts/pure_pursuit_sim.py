@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 
 #================================================================
-# File name: pure_pursuit_sim.py                                                                  
-# Description: pure pursuit controller for GEM vehicle in Gazebo                                                              
+# File name: pure_pursuit_sim.py
+# Description: pure pursuit controller for GEM vehicle in Gazebo
 # Author: Hang Cui
-# Email: hangcui3@illinois.edu                                                                     
-# Date created: 07/10/2021                                                                
-# Date last modified: 07/15/2021                                                          
-# Version: 0.1                                                                    
-# Usage: rosrun gem_pure_pursuit_sim pure_pursuit_sim.py                                                                    
-# Python version: 3.8                                                             
+# Email: hangcui3@illinois.edu
+# Date created: 07/10/2021
+# Date last modified: 07/15/2021
+# Version: 0.1
+# Usage: rosrun gem_pure_pursuit_sim pure_pursuit_sim.py
+# Python version: 3.8
 #================================================================
 
 # Python Headers
-import os 
+import os
 import csv
 import math
 import numpy as np
@@ -31,8 +31,16 @@ from tf.transformations import euler_from_quaternion, quaternion_from_euler
 from gazebo_msgs.srv import GetModelState
 from gazebo_msgs.msg import ModelState
 
+# Our Headers
+from robot_manager_msgs.msg import NavigationStatus
+
+# NavigationStatus constants
+IDLE = 0
+RUNNING = 1
+ERROR = 2
+
 class PurePursuit(object):
-    
+
     def __init__(self):
 
         self.rate       = rospy.Rate(20)
@@ -49,11 +57,11 @@ class PurePursuit(object):
         self.ackermann_msg.steering_angle_velocity = 0.0
         self.ackermann_msg.acceleration            = 0.0
         self.ackermann_msg.jerk                    = 0.0
-        self.ackermann_msg.speed                   = 0.0 
+        self.ackermann_msg.speed                   = 0.0
         self.ackermann_msg.steering_angle          = 0.0
 
         self.ackermann_pub = rospy.Publisher('/gem/ackermann_cmd', AckermannDrive, queue_size=1)
-        self.navigation_status_sub = rospy.Subscriber('navigation_status', NavigationStatus, navigation_status_cb)
+        self.navigation_status_sub = rospy.Subscriber('navigation_status', NavigationStatus, self.navigation_status_cb)
 
     # import waypoints.csv into a list (path_points)
     def read_waypoints(self):
@@ -74,7 +82,7 @@ class PurePursuit(object):
     def dist(self, p1, p2):
         return round(np.sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2), 3)
 
-    # find the angle bewtween two vectors    
+    # find the angle bewtween two vectors
     def find_angle(self, v1, v2):
         cosang = np.dot(v1, v2)
         sinang = la.norm(np.cross(v1, v2))
@@ -84,7 +92,7 @@ class PurePursuit(object):
     def get_gem_pose(self):
 
         rospy.wait_for_service('/gazebo/get_model_state')
-        
+
         try:
             service_response = rospy.ServiceProxy('/gazebo/get_model_state', GetModelState)
             model_state = service_response(model_name='gem')
@@ -100,14 +108,16 @@ class PurePursuit(object):
 
         return round(x,4), round(y,4), round(yaw,4)
 
-    def navigation_status_cb(msg):
-        rospy.loginfo("Received message: %s", msg.data)
+    # Call back for the navigation_status subscriber.
+    # Move the robot when the status is RUNNING, stop the robot otherwise.
+    def navigation_status_cb(self, msg):
+        rospy.loginfo("Navigation status received: %s", msg.status)
 
-        if msg.status == MessageType::ERROR:
-            self.running = True
+        self.running = (msg.status == RUNNING)
+        rospy.loginfo("Running robot: %s", self.running)
 
     def start_pp(self):
-        
+
         while not rospy.is_shutdown():
 
             # Wait for Navigation Status to change.
@@ -145,22 +155,22 @@ class PurePursuit(object):
             # true look-ahead distance between a waypoint and current position
             L = self.dist_arr[self.goal]
 
-            # transforming the goal point into the vehicle coordinate frame 
+            # transforming the goal point into the vehicle coordinate frame
             gvcx = self.path_points_x[self.goal] - curr_x
             gvcy = self.path_points_y[self.goal] - curr_y
             goal_x_veh_coord = gvcx*np.cos(curr_yaw) + gvcy*np.sin(curr_yaw)
             goal_y_veh_coord = gvcy*np.cos(curr_yaw) - gvcx*np.sin(curr_yaw)
 
-            # find the curvature and the angle 
+            # find the curvature and the angle
             alpha   = self.path_points_yaw[self.goal] - (curr_yaw)
             k       = 0.285
-            angle_i = math.atan((2 * k * self.wheelbase * math.sin(alpha)) / L) 
+            angle_i = math.atan((2 * k * self.wheelbase * math.sin(alpha)) / L)
             angle   = angle_i*2
             angle   = round(np.clip(angle, -0.61, 0.61), 3)
 
             ct_error = round(np.sin(alpha) * L, 3)
 
-            print("Crosstrack Error: " + str(ct_error))
+            # print("Crosstrack Error: " + str(ct_error))
 
             # implement constant pure pursuit controller
             self.ackermann_msg.speed          = 2.8

@@ -23,26 +23,37 @@ namespace navigation_manager
   void NavigationStatusManager::RobotStatusCB(const robot_manager_msgs::RobotStatus::ConstPtr& msg)
   {
     ROS_DEBUG("Robot status received: %u", msg->status);
+    bool changed = false;
+
+    // For readability
+    using namespace robot_manager_msgs;
 
     switch (msg->status)
     {
-      case robot_manager_msgs::RobotStatus::IDLE:
-        m_status = robot_manager_msgs::NavigationStatus::RUNNING;
+      case RobotStatus::IDLE:
+        changed = (m_status != NavigationStatus::RUNNING);
+        m_status = NavigationStatus::RUNNING;
         break;
-      case robot_manager_msgs::RobotStatus::RUNNING:
+      case RobotStatus::RUNNING:
         break;
-      case robot_manager_msgs::RobotStatus::ERROR:
-        m_status = robot_manager_msgs::NavigationStatus::IDLE;
+      case RobotStatus::ERROR:
+        changed = (m_status != NavigationStatus::IDLE);
+        m_status = NavigationStatus::IDLE;
         break;
       default:
         ROS_WARN("Unexpected robot status: %u", msg->status);
         break;
     }
 
-    robot_manager_msgs::NavigationStatus ns;
-    ns.status = m_status;
-    m_pub.publish(ns);
-    ROS_INFO("Changed navigation status: %u", m_status);
+    // Only publish when there has been a change.
+    if (changed)
+    {
+      NavigationStatus ns;
+      ns.status = m_status;
+      m_pub.publish(ns);
+
+      ROS_INFO("Changed navigation status to: %u", m_status);
+    }
   }
 
 }  // namespace navigation_manager
