@@ -1,7 +1,6 @@
 # POLARIS_Robot_Manager
 
 This s a tiny Robot manager Using Gazebo, ROS and POLARIS_GEM_e2 done within a week, with the free time I could find.
-(30h: 8h of research, 22h of development)
 
 # Dependencies
 
@@ -103,7 +102,9 @@ The software architecture of this project is simple. First of all, there is a ma
 
 In this project the Robot Status Manager is the one in charge of reading all different sensor status and determining whether the robot is in a healthy condition or not. This gives, yet, another level of abstraction for other parts of the system to not worry about the sensors at all, but just read the overall Robot Status when needed.
 
-Additionally, there would be a Navigation Manager that would subscribe to the Robot Status, and send commands to the robot to move around the map from one waypoint to another, only when the robot status would be either IDLE or RUNNING. During those movements it would report to the Robot Status Manager that the robot is moving, so the Robot Status would be RUNNING. When in ERROR state, the Navigation Manager would stop the robot until the error clears.
+Additionally, there is a Navigation Manager that subscribes to the Robot Status. When the robot status is IDLE it decides to go into RUNNING state and start sending commands to the robot to move around the map from one waypoint to another. During those movements it would report to the Robot Status Manager that the robot is moving, so the Robot Status would be RUNNING. When in ERROR state, the Navigation Manager would stop the robot until the error clears.
+
+Currently the Navigation Manager and the algorithm triggering the movement are in two different packages to clarify that I did not make the "gem_pure_pursuite_sim_new" I just slighlty modified it to send commands when the navigation status is RUNNING, and stop when it is not RUNNING. However, ideally it would part of the same package.
 
 This software architecture gives clear responsability to each node and makes for easy to use communication, as well as adding in flexibility and safety.
 
@@ -117,7 +118,8 @@ Therefore, this would be the first thing to implement next.
 
 ## Behavior Trees
 
-It would be benefitial to add Behavior Trees to the Robot Status Manager, as it can easily become overcomplicated with if statements, when its functionality grows, taking care of all other possible scenarios the robot could be involved in.
+It would be benefitial to add Behavior Trees to the Navigation Manager, as it can easily become overcomplicated with switch cases, when its functionality grows, taking care of all other possible scenarios the robot could be involved in.
+Also, the main decision making to start moving should probably be moved to a separate higher level class. That way, the robot behaviour is dealt by a separate decision making package, while the navigation has only navigation decisions to make, to decide how to move.
 
 ## Config Management
 
