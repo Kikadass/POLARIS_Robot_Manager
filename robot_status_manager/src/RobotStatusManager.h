@@ -1,10 +1,10 @@
-#include "battery_manager/BatteryStatus.h"
-#include "gps_accuracy_manager/GpsAccuracyStatus.h"
-#include "signal_status_manager/SignalStatus.h"
-#include "temperature_manager/TemperatureStatus.h"
-
+#include <battery_manager/BatteryStatus.h>
+#include <gps_accuracy_manager/GpsAccuracyStatus.h>
+#include <navigation_manager/NavigationStatus.h>
 #include <ros/ros.h>
+#include <signal_status_manager/SignalStatus.h>
 #include <std_msgs/Bool.h>
+#include <temperature_manager/TemperatureStatus.h>
 
 #include <vector>
 
@@ -16,7 +16,8 @@ namespace robot_status_manager
     EMERGENCY_BUTTON,
     GPS_ACCURACY,
     SIGNAL,
-    TEMPERATURE
+    TEMPERATURE,
+    NAVIGATION
   };
 
   class RobotStatusManager
@@ -43,6 +44,9 @@ namespace robot_status_manager
     }
 
     void EmergencyButtonPressedCB(const std_msgs::Bool::ConstPtr& msg);
+    void NavigationStatusCB(const navigation_manager::NavigationStatus::ConstPtr& msg);
+
+    void SetStatus(const unsigned int robotStatus);
 
     ERROR_TYPE determineErrorType(const battery_manager::BatteryStatus::ConstPtr& msg) const;
     ERROR_TYPE determineErrorType(const gps_accuracy_manager::GpsAccuracyStatus::ConstPtr& msg) const;
@@ -56,6 +60,7 @@ namespace robot_status_manager
     ros::Subscriber m_gpsAccuracyStatusSub;
     ros::Subscriber m_signalStatusSub;
     ros::Subscriber m_temperatureStatusSub;
+    ros::Subscriber m_navigationStatusSub;
 
     std::set<ERROR_TYPE> m_errors;
 

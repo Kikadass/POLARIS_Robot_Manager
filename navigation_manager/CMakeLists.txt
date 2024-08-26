@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(robot_status_manager)
+project(navigation_manager)
 
 ## Find catkin macros and libraries
 find_package(catkin REQUIRED COMPONENTS
@@ -10,10 +10,10 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   RobotStatus.msg
-# )
+add_message_files(
+  FILES
+  NavigationStatus.msg
+)
 
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
@@ -32,18 +32,13 @@ generate_messages(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES robot_status_manager
+#  LIBRARIES navigation_manager
   CATKIN_DEPENDS 
     roscpp
     message_runtime
     std_msgs
     genmsg
     robot_manager_msgs
-    battery_manager
-    gps_accuracy_manager
-    signal_status_manager
-    temperature_manager
-    navigation_manager
 #  DEPENDS system_lib
 )
 
@@ -64,7 +59,7 @@ add_subdirectory(src)
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_robot_status_manager.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_navigation_manager.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

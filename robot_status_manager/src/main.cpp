@@ -1,4 +1,3 @@
-#include "robot_status_manager/RobotStatus.h"
 #include "RobotStatusManager.h"
 
 #include <ros/ros.h>
@@ -12,7 +11,7 @@ int main(int argc, char** argv)
   ros::Rate rate(1);  // Publish at 1 Hz
   while (ros::ok())
   {
-    rsm.PublishRobotStatus();
+    rsm.Update();
 
     ros::spinOnce();
     rate.sleep();

@@ -5,6 +5,7 @@
     <node name="gps_accuracy_manager" pkg="gps_accuracy_manager" type="gps_accuracy_manager_node" output="screen"/>
     <node name="signal_status_manager" pkg="signal_status_manager" type="signal_status_manager_node" output="screen"/>
     <node name="temperature_manager" pkg="temperature_manager" type="temperature_manager_node" output="screen"/>
+    <node name="pure_pursuit_sim_new_node" pkg="gem_pure_pursuit_sim_new"  type="pure_pursuit_sim.py" output="screen" />
 
     <!-- You can add more nodes as needed -->
     <node name="robot_status_manager" pkg="robot_status_manager" type="robot_status_manager_node" output="screen"/>

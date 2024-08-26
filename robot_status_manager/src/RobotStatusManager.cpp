@@ -1,6 +1,6 @@
 #include "RobotStatusManager.h"
 
-#include "robot_status_manager/RobotStatus.h"
+#include <robot_manager_msgs/RobotStatus.h>
 
 #include <functional>
 #include <memory>
@@ -8,7 +8,7 @@
 namespace robot_status_manager
 {
   RobotStatusManager::RobotStatusManager(ros::NodeHandle& nh)
-      : m_pub(nh.advertise<RobotStatus>("robot_status", 1000))
+      : m_pub(nh.advertise<robot_manager_msgs::RobotStatus>("robot_status", 1000))
       , m_batteryStatusSub(nh.subscribe<battery_manager::BatteryStatus>(
             "battery_status", 1000, &RobotStatusManager::CheckForErrorsCB<battery_manager::BatteryStatus>, this))
       , m_emergencyButtonSub(
@@ -25,14 +25,29 @@ namespace robot_status_manager
             1000,
             &RobotStatusManager::CheckForErrorsCB<temperature_manager::TemperatureStatus>,
             this))
-      , m_status(RobotStatus::IDLE)
+      , m_navigationStatusSub(nh.subscribe("navigation_status", 1000, &RobotStatusManager::NavigationStatusCB, this))
+      , m_status(robot_manager_msgs::RobotStatus::IDLE)
   {
+  }
+
+  void RobotStatusManager::Update()
+  {
+    if (!m_errors.empty())
+    {
+      m_status = robot_manager_msgs::RobotStatus::ERROR;
+    }
+    else if (m_status == robot_manager_msgs::RobotStatus::ERROR)
+    {
+      m_status = robot_manager_msgs::RobotStatus::IDLE;
+    }
+
+    PublishRobotStatus();
   }
 
   void RobotStatusManager::PublishRobotStatus() const
   {
-    RobotStatus msg;
-    msg.status = (m_errors.empty()) ? RobotStatus::IDLE : RobotStatus::ERROR;
+    robot_manager_msgs::RobotStatus msg;
+    msg.status = m_status;
     m_pub.publish(msg);
 
     ROS_INFO("Published robot status: %d", msg.status);
@@ -49,6 +64,34 @@ namespace robot_status_manager
     {
       m_errors.erase(ERROR_TYPE::EMERGENCY_BUTTON);
     }
+  }
+
+  void RobotStatusManager::NavigationStatusCB(const navigation_manager::NavigationStatus::ConstPtr& msg)
+  {
+    if (msg->status == navigation_manager::NavigationStatus::ERROR)
+    {
+      m_errors.insert(ERROR_TYPE::NAVIGATION);
+    }
+    else
+    {
+      if (m_errors.count(ERROR_TYPE::NAVIGATION) > 0)
+      {
+        m_errors.erase(ERROR_TYPE::NAVIGATION);
+      }
+
+      const std::unordered_map<navigation_manager::NavigationStatus, robot_manager_msgs::RobotStatus> statusMap = {
+          {navigation_manager::NavigationStatus::RUNNING, robot_manager_msgs::RobotStatus::RUNNING},
+          {navigation_manager::NavigationStatus::IDLE, robot_manager_msgs::RobotStatus::IDLE},
+          {navigation_manager::NavigationStatus::ERROR, robot_manager_msgs::RobotStatus::ERROR}};
+
+      SetStatus(statusMap.at(msg->status));
+    }
+  }
+
+  void SetStatus(const unsigned int robotStatus)
+  {
+    // Do not change status if there are ERRORS.
+    if (m_errors.empty()) m_status = robotStatus;
   }
 
   ERROR_TYPE RobotStatusManager::determineErrorType(const battery_manager::BatteryStatus::ConstPtr& msg) const

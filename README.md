@@ -1,6 +1,7 @@
 # POLARIS_Robot_Manager
 
 This s a tiny Robot manager Using Gazebo, ROS and POLARIS_GEM_e2 done within a week, with the free time I could find.
+(30h: 8h of research, 22h of development)
 
 # Dependencies
 
